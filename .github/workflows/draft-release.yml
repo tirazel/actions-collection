@@ -7,6 +7,9 @@ on:
         description: 'The version you want to release.'
         required: true
   workflow_call:
+    secrets:
+      envPAT:
+        required: true
 
 jobs:
   draft-new-release:
@@ -23,8 +26,6 @@ jobs:
         with:
           version: ${{ github.event.inputs.version }}
 
-      # In order to make a commit, we need to initialize a user.
-      # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
       - name: Initialize mandatory git config
         run: |
           git config user.name "GitHub actions"
@@ -40,13 +41,13 @@ jobs:
 
       - name: Push new branch
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.envPAT }}
         run: git push origin release/${{ github.event.inputs.version }}
 
       - name: Create pull request
         uses: thomaseizinger/create-pull-request@1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.envPAT }}
         with:
           head: release/${{ github.event.inputs.version }}
           base: main
