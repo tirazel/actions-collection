@@ -1,11 +1,6 @@
 name: "Draft new release"
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'The version you want to release.'
-        required: true
   workflow_call:
     secrets:
       envPAT:
