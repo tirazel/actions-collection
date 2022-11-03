@@ -1,0 +1,30 @@
+name: Update changelog on PR merge
+on:
+  pull_request:
+    branches:
+      - main
+    types: closed
+  workflow_call:
+
+jobs:
+  update_changelog:
+    if: |
+      github.event.pull_request.merged == true && 
+      !startsWith(github.head_ref, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Update version.txt
+        run: |
+          sed -i '/## \[Unreleased\]/a \\ \n${{ github.event.pull_request.title }}' CHANGELOG.md
+      - name: Amend the last commit
+        run: |
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "Version Update"
+          git commit -a --amend --no-edit
+          git push --force-with-lease
+          echo "Complete"
