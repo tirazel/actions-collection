@@ -17,7 +17,7 @@ jobs:
         run: |
           UPDATE_TITLE=$(echo "${UPDATE_TITLE_ENV}" | sed -e 's/\\/\\\\/g' -e 's/$/\\&/g')
           UPDATE_BODY=$(echo "${UPDATE_BODY_ENV}" | sed -e 's/^/&  /g' -e 's/\\/\\\\/g' -e 's/$/\\&/g')
-          sed -i "/## \[Unreleased\]/a\\\n- ### ${UPDATE_TITLE}n${UPDATE_BODY}n\n---\n" CHANGELOG.md
+          sed -i "/## \[Unreleased\]/a\\\n- ### ${UPDATE_TITLE}n${UPDATE_BODY}n---" CHANGELOG.md
         env:
           UPDATE_TITLE_ENV: '${{ github.event.pull_request.title }}'
           UPDATE_BODY_ENV: '${{ github.event.pull_request.body }}'
