@@ -15,8 +15,8 @@ jobs:
           fetch-depth: 0
       - name: 'Update CHANGELOG.md'
         run: |
-          UPDATE_TITLE=$(echo "${UPDATE_TITLE_ENV}" | sed 's/$/\\&/g')
-          UPDATE_BODY=$(echo "${UPDATE_BODY_ENV}" | sed -e 's/^/&  /g' -e 's/$/\\&/g')
+          UPDATE_TITLE=$(echo "${UPDATE_TITLE_ENV}" | sed -e 's/\\/\\\\/g' -e 's/$/\\&/g')
+          UPDATE_BODY=$(echo "${UPDATE_BODY_ENV}" | sed -e 's/^/&  /g' -e 's/\\/\\\\/g' -e 's/$/\\&/g')
           sed -i "/## \[Unreleased\]/a\\\n- ### ${UPDATE_TITLE}n${UPDATE_BODY}n\n---\n" CHANGELOG.md
         env:
           UPDATE_TITLE_ENV: '${{ github.event.pull_request.title }}'
